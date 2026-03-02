@@ -1,0 +1,63 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Username registry - production safe
+    // Allows checking individual usernames (get) but blocks enumeration (list)
+    match /usernames/{username} {
+      // Anyone can check if a specific username exists
+      allow get: if true;
+
+      // Block listing/querying all usernames (prevents scraping)
+      allow list: if false;
+
+      // Only signed-in users can claim a username
+      // Must write their own uid and only allowed fields
+      allow create: if request.auth != null
+                    && request.resource.data.uid == request.auth.uid
+                    && request.resource.data.keys().hasOnly(['uid', 'createdAt'])
+                    && username.size() >= 3
+                    && username.size() <= 20;
+
+      // Username ownership is immutable - no updates or deletes
+      allow update, delete: if false;
+    }
+
+    // User profiles - only accessible by the owner
+    match /users/{uid} {
+      // Users can only read their own profile
+      allow read: if request.auth != null && request.auth.uid == uid;
+
+      // Users can only write to their own profile
+      allow create: if request.auth != null && request.auth.uid == uid;
+
+      // Allow updates but validate required fields remain
+      allow update: if request.auth != null
+                    && request.auth.uid == uid
+                    && request.resource.data.uid == uid;
+
+      // Don't allow profile deletion
+      allow delete: if false;
+    }
+
+    // Screen time data - user's private data
+    match /screentime/{userId}/daily/{date} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Challenges progress
+    match /challenges/{challengeId} {
+      // Public challenges can be read by anyone
+      allow read: if resource.data.isPublic == true ||
+                     (request.auth != null && resource.data.userId == request.auth.uid);
+
+      // Only the owner can write
+      allow write: if request.auth != null && request.resource.data.userId == request.auth.uid;
+    }
+
+    // Default: deny everything else
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

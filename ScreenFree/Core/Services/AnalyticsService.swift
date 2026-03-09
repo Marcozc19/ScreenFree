@@ -29,6 +29,23 @@ enum AnalyticsEvent: String {
 
     // Screen views
     case screenView = "screen_view"
+
+    // Social events
+    case socialTabOpened = "social_tab_opened"
+    case friendsSectionExpanded = "friends_section_expanded"
+    case friendSearchSubmitted = "friend_search_submitted"
+    case friendSearchResult = "friend_search_result"
+    case friendRequestSent = "friend_request_sent"
+    case friendRequestAccepted = "friend_request_accepted"
+    case friendRequestDeclined = "friend_request_declined"
+
+    // Group events
+    case groupCreated = "group_created"
+    case groupJoined = "group_joined"
+    case groupLeft = "group_left"
+    case leaderboardViewed = "leaderboard_viewed"
+    case timeWindowChanged = "time_window_changed"
+    case inviteCodeShared = "invite_code_shared"
 }
 
 @MainActor
@@ -151,5 +168,80 @@ final class AnalyticsService {
 
         // Firebase Analytics would go here:
         // Analytics.setUserID(userId)
+    }
+
+    // MARK: - Social Events
+
+    func logSocialTabOpened(hasGroups: Bool, friendCount: Int) {
+        logEvent(.socialTabOpened, parameters: [
+            "has_groups": hasGroups,
+            "friend_count": friendCount
+        ])
+    }
+
+    func logFriendsSectionExpanded(friendCount: Int) {
+        logEvent(.friendsSectionExpanded, parameters: [
+            "friend_count": friendCount
+        ])
+    }
+
+    func logFriendSearchSubmitted(queryLength: Int) {
+        logEvent(.friendSearchSubmitted, parameters: [
+            "query_length": queryLength
+        ])
+    }
+
+    func logFriendSearchResult(result: String) {
+        logEvent(.friendSearchResult, parameters: [
+            "result": result
+        ])
+    }
+
+    func logFriendRequestSent() {
+        logEvent(.friendRequestSent)
+    }
+
+    func logFriendRequestAccepted() {
+        logEvent(.friendRequestAccepted)
+    }
+
+    func logFriendRequestDeclined() {
+        logEvent(.friendRequestDeclined)
+    }
+
+    // MARK: - Group Events
+
+    func logGroupCreated() {
+        logEvent(.groupCreated)
+    }
+
+    func logGroupJoined(method: String) {
+        logEvent(.groupJoined, parameters: [
+            "method": method  // "inviteCode" or "directInvite"
+        ])
+    }
+
+    func logGroupLeft() {
+        logEvent(.groupLeft)
+    }
+
+    func logLeaderboardViewed(memberCount: Int, timeWindow: String) {
+        logEvent(.leaderboardViewed, parameters: [
+            "member_count": memberCount,
+            "time_window": timeWindow
+        ])
+    }
+
+    func logTimeWindowChanged(from: String, to: String) {
+        logEvent(.timeWindowChanged, parameters: [
+            "from": from,
+            "to": to
+        ])
+    }
+
+    func logInviteCodeShared(surface: String) {
+        logEvent(.inviteCodeShared, parameters: [
+            "surface": surface  // "leaderboardHeader" or "fillSlot"
+        ])
     }
 }

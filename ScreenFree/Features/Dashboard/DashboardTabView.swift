@@ -2,56 +2,36 @@ import SwiftUI
 
 struct DashboardTabView: View {
     @Environment(AppState.self) private var appState
-    @State private var selectedTab: Tab = .home
-
-    enum Tab: String, CaseIterable {
-        case home = "Home"
-        case progress = "Progress"
-        case challenges = "Challenges"
-        case profile = "Profile"
-
-        var icon: String {
-            switch self {
-            case .home: return "house"
-            case .progress: return "chart.line.uptrend.xyaxis"
-            case .challenges: return "flag"
-            case .profile: return "person"
-            }
-        }
-
-        var selectedIcon: String {
-            switch self {
-            case .home: return "house.fill"
-            case .progress: return "chart.line.uptrend.xyaxis"
-            case .challenges: return "flag.fill"
-            case .profile: return "person.fill"
-            }
-        }
-    }
+    @State private var viewModel = DashboardViewModel()
 
     var body: some View {
-        TabView(selection: $selectedTab) {
-            ForEach(Tab.allCases, id: \.self) { tab in
+        TabView(selection: $viewModel.selectedTab) {
+            ForEach(DashboardTab.allCases, id: \.self) { tab in
                 tabContent(for: tab)
                     .tabItem {
                         Label(
                             tab.rawValue,
-                            systemImage: selectedTab == tab ? tab.selectedIcon : tab.icon
+                            systemImage: viewModel.selectedTab == tab ? tab.selectedIcon : tab.icon
                         )
                     }
                     .tag(tab)
             }
         }
         .tint(Theme.Colors.primary)
+        .onChange(of: viewModel.selectedTab) { _, newTab in
+            viewModel.logTabChanged(to: newTab)
+        }
     }
 
     @ViewBuilder
-    private func tabContent(for tab: Tab) -> some View {
+    private func tabContent(for tab: DashboardTab) -> some View {
         switch tab {
         case .home:
             HomeView()
         case .progress:
-            ProgressView()
+            ProgressDashboardView()
+        case .social:
+            SocialHubView()
         case .challenges:
             ChallengesView()
         case .profile:

@@ -55,7 +55,9 @@ final class AppState {
     }
 
     func completeOnboarding() {
-        hasCompletedOnboarding = true
+        withAnimation(.easeInOut(duration: Theme.Animation.normal)) {
+            hasCompletedOnboarding = true
+        }
         userProfile?.onboardingCompleted = true
         persistState()
     }

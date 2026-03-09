@@ -30,7 +30,7 @@ struct ScreenTimeData: Codable {
     }
 }
 
-struct CategoryUsage: Identifiable, Codable {
+struct CategoryUsage: Identifiable, Codable, Equatable {
     let id: String
     let name: String
     let hours: Double

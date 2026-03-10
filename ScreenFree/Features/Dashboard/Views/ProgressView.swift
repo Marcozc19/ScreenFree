@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ProgressView: View {
+struct ProgressDashboardView: View {
     @Environment(AppState.self) private var appState
 
     // Mock weekly data
@@ -112,6 +112,6 @@ struct ProgressView: View {
         level: 1
     )
 
-    return ProgressView()
+    return ProgressDashboardView()
         .environment(appState)
 }

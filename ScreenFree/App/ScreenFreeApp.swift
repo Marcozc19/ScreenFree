@@ -15,15 +15,19 @@ struct ScreenFreeApp: App {
 struct ContentView: View {
     @Environment(AppState.self) private var appState
 
+    private var showDashboard: Bool {
+        appState.hasCompletedOnboarding && appState.isAuthenticated
+    }
+
     var body: some View {
         Group {
-            if appState.hasCompletedOnboarding && appState.isAuthenticated {
+            if showDashboard {
                 DashboardTabView()
             } else {
                 OnboardingCoordinator()
             }
         }
-        .animation(.easeInOut(duration: Theme.Animation.normal), value: appState.hasCompletedOnboarding)
+        .id(showDashboard)
     }
 }
 

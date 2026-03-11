@@ -93,9 +93,9 @@ struct ClockDialView: View {
 
     // Computed properties
     private var displayTime: String {
-        let minutes = Int(Double(totalMinutes) * animationProgress)
-        let h = minutes / 60
-        let m = minutes % 60
+        // Show final time immediately - only the arc animates
+        let h = totalMinutes / 60
+        let m = totalMinutes % 60
         if interval == .week {
             return "\(h)h \(m)m avg"
         }

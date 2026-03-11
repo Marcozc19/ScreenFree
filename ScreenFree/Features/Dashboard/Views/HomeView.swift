@@ -164,8 +164,8 @@ struct HomeView: View {
         switch hour {
         case 5..<12: return "morning"
         case 12..<17: return "afternoon"
-        case 17..<5: return "evening"
-        default: return "evening"
+        case 17..<21: return "evening"
+        default: return "night"
         }
     }
 

@@ -9,10 +9,10 @@ struct LeaderboardRowView: View {
     private var rankColor: Color {
         guard let rank = member.rank else { return Theme.Colors.mutedForeground }
         switch rank {
-        case 1: return Color(red: 1.0, green: 0.84, blue: 0.0)  // Gold
-        case 2: return Color(red: 0.75, green: 0.75, blue: 0.75)  // Silver
-        case 3: return Color(red: 0.80, green: 0.50, blue: 0.20)  // Bronze
-        default: return Theme.Colors.mutedForeground
+        case 1: return Color(red: 1.0, green: 0.75, blue: 0.0)   // Gold - more saturated
+        case 2: return Color(red: 0.55, green: 0.55, blue: 0.60) // Silver - darker
+        case 3: return Color(red: 0.85, green: 0.45, blue: 0.15) // Bronze - richer
+        default: return Theme.Colors.foreground
         }
     }
 
@@ -47,21 +47,23 @@ struct LeaderboardRowView: View {
                 HStack(spacing: Theme.Spacing.sm) {
                     Avatar(displayName: member.displayName, size: .medium)
 
-                    VStack(alignment: .leading, spacing: 2) {
-                        HStack(spacing: Theme.Spacing.xs) {
-                            Text(member.displayName)
-                                .font(.system(size: Theme.Typography.base, weight: .semibold))
-                                .foregroundColor(Theme.Colors.foreground)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(member.displayName)
+                            .font(.system(size: Theme.Typography.base, weight: .semibold))
+                            .foregroundColor(Theme.Colors.foreground)
+                            .lineLimit(1)
+                            .truncationMode(.tail)
+                            .frame(minWidth: 80, maxWidth: 140, alignment: .leading)
 
-                            if member.isCurrentUser {
-                                Text("You")
-                                    .font(.system(size: Theme.Typography.xs, weight: .medium))
-                                    .foregroundColor(Theme.Colors.primary)
-                                    .padding(.horizontal, 6)
-                                    .padding(.vertical, 2)
-                                    .background(Theme.Colors.primary.opacity(0.1))
-                                    .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.sm))
-                            }
+                        if member.isCurrentUser {
+                            Text("You")
+                                .font(.system(size: Theme.Typography.xs, weight: .medium))
+                                .foregroundColor(Theme.Colors.primary)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Theme.Colors.primary.opacity(0.1))
+                                .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.sm))
+                                .fixedSize()
                         }
 
                         if member.isStale {
@@ -156,21 +158,21 @@ struct LeaderboardRowView: View {
                 if rank <= 3 {
                     // Medal for top 3
                     Circle()
-                        .fill(rankColor.opacity(0.2))
+                        .fill(rankColor.opacity(0.5))
                         .frame(width: 36, height: 36)
 
                     Text("\(rank)")
-                        .font(.system(size: Theme.Typography.lg, weight: .bold))
+                        .font(.system(size: Theme.Typography.lg, weight: .black))
                         .foregroundColor(rankColor)
                 } else {
-                    // Number for others
+                    // Number for others - use higher contrast
                     Circle()
                         .fill(Theme.Colors.muted)
                         .frame(width: 36, height: 36)
 
                     Text("\(rank)")
-                        .font(.system(size: Theme.Typography.base, weight: .semibold))
-                        .foregroundColor(Theme.Colors.mutedForeground)
+                        .font(.system(size: Theme.Typography.base, weight: .bold))
+                        .foregroundColor(Theme.Colors.foreground)
                 }
             } else {
                 // No rank (data unavailable)
@@ -207,7 +209,7 @@ struct LeaderboardRowView: View {
         LeaderboardRowView(
             member: LeaderboardMemberSnapshot(
                 userId: UUID(),
-                displayName: "You",
+                displayName: "Marco Zhuang",
                 rank: 2,
                 todayMinutes: 195,
                 weeklyAvgMinutes: 210,

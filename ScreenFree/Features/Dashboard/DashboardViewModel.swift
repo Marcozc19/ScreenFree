@@ -67,7 +67,6 @@ final class DashboardViewModel {
 
 enum DashboardTab: String, CaseIterable {
     case home = "Home"
-    case progress = "Progress"
     case social = "Social"
     case challenges = "Challenges"
     case profile = "Profile"
@@ -75,7 +74,6 @@ enum DashboardTab: String, CaseIterable {
     var icon: String {
         switch self {
         case .home: return "house"
-        case .progress: return "chart.line.uptrend.xyaxis"
         case .social: return "person.3"
         case .challenges: return "flag"
         case .profile: return "person"
@@ -85,7 +83,6 @@ enum DashboardTab: String, CaseIterable {
     var selectedIcon: String {
         switch self {
         case .home: return "house.fill"
-        case .progress: return "chart.line.uptrend.xyaxis"
         case .social: return "person.3.fill"
         case .challenges: return "flag.fill"
         case .profile: return "person.fill"

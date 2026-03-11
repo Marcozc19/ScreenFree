@@ -328,7 +328,14 @@ struct SignInSheet: View {
                 isLoading = false
             } catch {
                 isLoading = false
-                passwordError = error.localizedDescription
+                let errorMessage = error.localizedDescription.lowercased()
+                // Show error on appropriate field based on error message
+                if errorMessage.contains("password") {
+                    passwordError = error.localizedDescription
+                } else {
+                    // Default to email field for user/email errors
+                    emailError = error.localizedDescription
+                }
             }
         }
     }

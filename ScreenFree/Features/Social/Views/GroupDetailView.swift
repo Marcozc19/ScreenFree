@@ -71,6 +71,9 @@ struct GroupDetailView: View {
         .sheet(isPresented: $viewModel.showInviteSheet) {
             inviteSheet
         }
+        .sheet(isPresented: $viewModel.showInviteFriendsSheet) {
+            inviteFriendsSheet
+        }
         .alert("Delete Group?", isPresented: $viewModel.showDeleteConfirmation) {
             Button("Cancel", role: .cancel) {}
             Button("Delete", role: .destructive) {
@@ -453,6 +456,22 @@ struct GroupDetailView: View {
                         .background(Theme.Colors.primary.opacity(0.1))
                         .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.lg))
                     }
+
+                    Button {
+                        viewModel.showInviteSheet = false
+                        viewModel.showInviteFriendsSheet = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "person.badge.plus")
+                            Text("Invite Friends")
+                        }
+                        .font(.system(size: Theme.Typography.base, weight: .semibold))
+                        .foregroundColor(Theme.Colors.primary)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: Theme.Sizes.buttonHeight)
+                        .background(Theme.Colors.primary.opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.lg))
+                    }
                 }
             }
             .padding(Theme.Spacing.lg)
@@ -468,6 +487,101 @@ struct GroupDetailView: View {
             }
         }
         .presentationDetents([.medium])
+    }
+
+    private var inviteFriendsSheet: some View {
+        NavigationStack {
+            VStack(spacing: Theme.Spacing.md) {
+                if viewModel.isLoadingFriends {
+                    Spacer()
+                    ProgressView()
+                    Text("Loading friends...")
+                        .font(.system(size: Theme.Typography.sm))
+                        .foregroundColor(Theme.Colors.mutedForeground)
+                    Spacer()
+                } else if viewModel.availableFriends.isEmpty {
+                    Spacer()
+                    VStack(spacing: Theme.Spacing.md) {
+                        Image(systemName: "person.2.slash")
+                            .font(.system(size: 40))
+                            .foregroundColor(Theme.Colors.mutedForeground.opacity(0.5))
+
+                        Text("No friends to invite")
+                            .font(.system(size: Theme.Typography.base, weight: .medium))
+                            .foregroundColor(Theme.Colors.mutedForeground)
+
+                        Text("All your accountability partners are already in this group, or you haven't added any yet.")
+                            .font(.system(size: Theme.Typography.sm))
+                            .foregroundColor(Theme.Colors.mutedForeground)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, Theme.Spacing.xl)
+                    }
+                    Spacer()
+                } else {
+                    ScrollView {
+                        VStack(spacing: Theme.Spacing.xs) {
+                            ForEach(viewModel.availableFriends) { friend in
+                                inviteFriendRow(friend)
+                            }
+                        }
+                        .padding(.horizontal, Theme.Spacing.lg)
+                        .padding(.top, Theme.Spacing.md)
+                    }
+                }
+            }
+            .background(Theme.Colors.background)
+            .navigationTitle("Invite Friends")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        viewModel.showInviteFriendsSheet = false
+                    }
+                }
+            }
+            .task {
+                await viewModel.loadAvailableFriends()
+            }
+        }
+        .presentationDetents([.medium, .large])
+    }
+
+    private func inviteFriendRow(_ friend: FriendRecord) -> some View {
+        HStack(spacing: Theme.Spacing.md) {
+            Avatar(displayName: friend.displayName, size: .small)
+
+            Text(friend.displayName)
+                .font(.system(size: Theme.Typography.base, weight: .medium))
+                .foregroundColor(Theme.Colors.foreground)
+
+            Spacer()
+
+            if viewModel.isFriendInvited(friend) {
+                HStack(spacing: 4) {
+                    Image(systemName: "checkmark")
+                    Text("Invited")
+                }
+                .font(.system(size: Theme.Typography.sm, weight: .medium))
+                .foregroundColor(Theme.Colors.primary)
+            } else {
+                Button {
+                    Task {
+                        await viewModel.inviteFriendToGroup(friend)
+                    }
+                } label: {
+                    Text("Invite")
+                        .font(.system(size: Theme.Typography.sm, weight: .semibold))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, Theme.Spacing.md)
+                        .padding(.vertical, Theme.Spacing.xs)
+                        .background(Theme.Colors.primary)
+                        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.md))
+                }
+            }
+        }
+        .padding(Theme.Spacing.md)
+        .background(Theme.Colors.card)
+        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.lg))
     }
 }
 

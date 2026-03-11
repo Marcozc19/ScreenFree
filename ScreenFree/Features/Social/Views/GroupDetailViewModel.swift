@@ -37,6 +37,7 @@ final class GroupDetailViewModel {
 
     var showRenameSheet: Bool = false
     var showInviteSheet: Bool = false
+    var showInviteFriendsSheet: Bool = false
     var showDeleteConfirmation: Bool = false
     var showLeaveConfirmation: Bool = false
 
@@ -44,6 +45,12 @@ final class GroupDetailViewModel {
 
     var newGroupName: String = ""
     var didCopyCode: Bool = false
+
+    // MARK: - Invite Friends State
+
+    var availableFriends: [FriendRecord] = []
+    var invitedFriendIds: Set<UUID> = []
+    var isLoadingFriends: Bool = false
 
     // MARK: - Initialization
 
@@ -191,6 +198,50 @@ final class GroupDetailViewModel {
         }
 
         isProcessing = false
+    }
+
+    // MARK: - Invite Friends Actions
+
+    func loadAvailableFriends() async {
+        guard let userId = currentUserId else { return }
+
+        isLoadingFriends = true
+
+        do {
+            let allFriends = try await socialService.getFriends(forUserId: userId)
+
+            // Filter to only accepted friends who aren't already in the group
+            let memberIds = Set(groupMembers.map { $0.id })
+            availableFriends = allFriends.filter { friend in
+                friend.status == .accepted && !memberIds.contains(friend.friendUserId(currentUserId: userId))
+            }
+        } catch {
+            availableFriends = []
+        }
+
+        isLoadingFriends = false
+    }
+
+    func inviteFriendToGroup(_ friend: FriendRecord) async {
+        guard let userId = currentUserId else { return }
+
+        let friendUserId = friend.friendUserId(currentUserId: userId)
+
+        do {
+            try await socialService.sendGroupInvite(
+                groupId: group.id,
+                recipientUserId: friendUserId,
+                senderId: userId
+            )
+            invitedFriendIds.insert(friendUserId)
+        } catch {
+            // Handle error silently for now
+        }
+    }
+
+    func isFriendInvited(_ friend: FriendRecord) -> Bool {
+        guard let userId = currentUserId else { return false }
+        return invitedFriendIds.contains(friend.friendUserId(currentUserId: userId))
     }
 
     // MARK: - Invite Code Actions

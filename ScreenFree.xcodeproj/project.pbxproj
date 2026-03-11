@@ -64,6 +64,9 @@
 		E1000001D2C4F6A900000003 /* GroupDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1000001D2C4F6A900000103 /* GroupDetailView.swift */; };
 		E1000001D2C4F6A900000004 /* GroupDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1000001D2C4F6A900000104 /* GroupDetailViewModel.swift */; };
 		E1000001D2C4F6A900000005 /* LeaderboardRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1000001D2C4F6A900000105 /* LeaderboardRowView.swift */; };
+		F1000001D2C4F6A900000001 /* ClockDialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000001D2C4F6A900000101 /* ClockDialView.swift */; };
+		F1000001D2C4F6A900000002 /* QuietChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000001D2C4F6A900000102 /* QuietChartView.swift */; };
+		F1000001D2C4F6A900000003 /* CategorySnapshotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1000001D2C4F6A900000103 /* CategorySnapshotView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -125,6 +128,9 @@
 		E1000001D2C4F6A900000103 /* GroupDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDetailView.swift; sourceTree = "<group>"; };
 		E1000001D2C4F6A900000104 /* GroupDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDetailViewModel.swift; sourceTree = "<group>"; };
 		E1000001D2C4F6A900000105 /* LeaderboardRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaderboardRowView.swift; sourceTree = "<group>"; };
+		F1000001D2C4F6A900000101 /* ClockDialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockDialView.swift; sourceTree = "<group>"; };
+		F1000001D2C4F6A900000102 /* QuietChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuietChartView.swift; sourceTree = "<group>"; };
+		F1000001D2C4F6A900000103 /* CategorySnapshotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySnapshotView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -242,6 +248,9 @@
 				A1000001D2C4F6A900000132 /* ProgressView.swift */,
 				A1000001D2C4F6A900000133 /* ChallengesView.swift */,
 				A1000001D2C4F6A900000134 /* ProfileView.swift */,
+				F1000001D2C4F6A900000101 /* ClockDialView.swift */,
+				F1000001D2C4F6A900000102 /* QuietChartView.swift */,
+				F1000001D2C4F6A900000103 /* CategorySnapshotView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -492,6 +501,9 @@
 				E1000001D2C4F6A900000003 /* GroupDetailView.swift in Sources */,
 				E1000001D2C4F6A900000004 /* GroupDetailViewModel.swift in Sources */,
 				E1000001D2C4F6A900000005 /* LeaderboardRowView.swift in Sources */,
+				F1000001D2C4F6A900000001 /* ClockDialView.swift in Sources */,
+				F1000001D2C4F6A900000002 /* QuietChartView.swift in Sources */,
+				F1000001D2C4F6A900000003 /* CategorySnapshotView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -28,8 +28,6 @@ struct DashboardTabView: View {
         switch tab {
         case .home:
             HomeView()
-        case .progress:
-            ProgressDashboardView()
         case .social:
             SocialHubView()
         case .challenges:
